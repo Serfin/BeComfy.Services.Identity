@@ -10,6 +10,7 @@ namespace BeComfy.Services.Identity.Domain
         {
             
         }
+        
         public User(Guid id, string role, string email, string password, 
             DateTime createdAt, DateTime updatedAt, 
             string firstname = null, string secondname = null, string surname = null)
