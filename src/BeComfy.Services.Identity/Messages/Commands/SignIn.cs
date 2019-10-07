@@ -1,4 +1,4 @@
-using BeComfy.Common.Messages;
+using BeComfy.Common.CqrsFlow;
 using Newtonsoft.Json;
 
 namespace BeComfy.Services.Identity.Messages.Commands
