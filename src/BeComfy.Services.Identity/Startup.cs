@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using BeComfy.Common.Authentication;
+using BeComfy.Common.Jaeger;
 using BeComfy.Services.Identity.Domain;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -36,6 +37,8 @@ namespace BeComfy.Services.Identity
             services.AddControllers()
                 .AddNewtonsoftJson();
             
+            services.AddJaeger();
+            services.AddOpenTracing();
 
             var builder = new ContainerBuilder();
             builder.RegisterAssemblyTypes(Assembly.GetEntryAssembly())
