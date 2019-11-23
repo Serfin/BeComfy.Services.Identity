@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -33,7 +33,9 @@ namespace BeComfy.Services.Identity
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddJwt();
-            services.AddControllers();
+            services.AddControllers()
+                .AddNewtonsoftJson();
+            
 
             var builder = new ContainerBuilder();
             builder.RegisterAssemblyTypes(Assembly.GetEntryAssembly())
