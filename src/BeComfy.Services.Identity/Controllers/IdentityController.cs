@@ -17,8 +17,7 @@ namespace BeComfy.Services.Identity.Controllers
         {
             _identityService = identityService;
         }
-
-    
+        
         [HttpGet("me")]
         [JwtAuthentication]
         public IActionResult Get() 
