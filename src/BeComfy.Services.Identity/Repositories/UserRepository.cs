@@ -1,71 +1,52 @@
-// using System;
-// using System.Data;
-// using System.Linq;
-// using System.Threading.Tasks;
-// using BeComfy.Common.EFCore;
-// using BeComfy.Services.Identity.Domain;
-// using Dapper;
+ using System;
+ using System.Threading.Tasks;
+ using BeComfy.Services.Identity.Domain;
+ using BeComfy.Services.Identity.EF;
+ using Microsoft.EntityFrameworkCore;
 
-// namespace BeComfy.Services.Identity.Repositories
-// {
-//     public class UserRepository : IUserRepository
-//     {
-//         // public readonly ISqlConnector _sqlConnector;
+ namespace BeComfy.Services.Identity.Repositories
+ {
+     public class UserRepository : IUserRepository
+     {
+         private readonly IdentityContext _context;
 
-//         // public UserRepository(ISqlConnector sqlConnector)
-//         // {
-//         //     _sqlConnector = sqlConnector;
-//         // }
+         public UserRepository(IdentityContext context)
+         {
+             _context = context;
+         }
         
-//         public async Task AddAsync(User user)
-//         {
-//             using (var connection = _sqlConnector.CreateConnection())
-//             {
-//                 connection.Open();
+         public async Task AddAsync(User user)
+         {
+             await _context.Users.AddAsync(user);
+             await _context.SaveChangesAsync();
+         }
 
-//                 var queryParameters = new DynamicParameters();
-//                 queryParameters.Add("@Id", user.Id);
-//                 queryParameters.Add("@Firstname", user.Firstname);
-//                 queryParameters.Add("@Secondname", user.Secondname);
-//                 queryParameters.Add("@Surname", user.Surname);
-//                 queryParameters.Add("@Role", user.Role);
-//                 queryParameters.Add("@Email", user.Email);
-//                 queryParameters.Add("@Password", user.Password);
-//                 queryParameters.Add("@CreatedAt", user.CreatedAt);
-//                 queryParameters.Add("@UpdatedAt", user.UpdatedAt);
+         public async Task DeleteAsync(Guid id)
+         {
+             var user = await GetAsync(id);
+             _context.Users.Remove(user);
+             await _context.SaveChangesAsync();
+         }
 
-//                 await connection.ExecuteAsync("CreateUser", queryParameters, 
-//                     commandType: CommandType.StoredProcedure);
+         public async Task<User> GetAsync(string email)
+         {
+             var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == email);
 
-//                 connection.Close();
-//             }
-//         }
+             return user;
+         }
 
-//         public Task DeleteAsync(Guid id)
-//         {
-//             throw new NotImplementedException();
-//         }
+         public async Task<User> GetAsync(Guid id)
+         {
+             var user = await _context.Users.FindAsync(id);
 
-//         public async Task<User> GetAsync(string email)
-//         {
-//             // TODO : DO NOT USE QUERY, USE TRY CATCH FOR CONNECTION EXCEPTIONS
+             return user;
+         }
 
-//             var sql = $"SELECT * FROM [Users].[dbo].[Identities] WHERE Email = '{email}'";
-//             using (var connection = _sqlConnector.CreateConnection())
-//             {
-//                 var person = await connection.QueryAsync<User>(sql);
-//                 return person.SingleOrDefault();
-//             }
-//         }
-
-//         public Task<User> GetAsync(Guid id)
-//         {
-//             throw new NotImplementedException();
-//         }
-
-//         public Task UpdateAsync(Guid id)
-//         {
-//             throw new NotImplementedException();
-//         }
-//     }
-// }
+         public async Task UpdateAsync(Guid id)
+         {
+             var user = await GetAsync(id);
+             _context.Users.Update(user);
+             await _context.SaveChangesAsync();
+         }
+     }
+ }

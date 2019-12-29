@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using BeComfy.Common.Authentication;
+using BeComfy.Common.EFCore;
 using BeComfy.Common.Jaeger;
 using BeComfy.Services.Identity.Domain;
+using BeComfy.Services.Identity.EF;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -39,14 +41,14 @@ namespace BeComfy.Services.Identity
             
             services.AddJaeger();
             services.AddOpenTracing();
+            services.AddEFCoreContext<IdentityContext>();
 
             var builder = new ContainerBuilder();
             builder.RegisterAssemblyTypes(Assembly.GetEntryAssembly())
                 .AsImplementedInterfaces();
             builder.Populate(services);
             builder.RegisterType<PasswordHasher<User>>().As<IPasswordHasher<User>>();
-            //builder.AddSqlServer();
-            
+
             Container = builder.Build();
 
             return new AutofacServiceProvider(Container);
@@ -57,6 +59,7 @@ namespace BeComfy.Services.Identity
         {
             app.UseRouting();
             app.UseAuthentication();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
