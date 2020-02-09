@@ -21,7 +21,7 @@ namespace BeComfy.Services.Identity.Controllers
         [HttpGet("me")]
         [JwtAuthentication]
         public IActionResult Get() 
-            => Content($"Your id: '{UserId:N}'.");
+            => Content($"Your id: '{UserId}'.");
 
         [HttpPost("sign-up")]
         public async Task<IActionResult> SignUp(SignUp command)
