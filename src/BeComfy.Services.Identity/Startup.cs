@@ -8,6 +8,7 @@ using Autofac.Extensions.DependencyInjection;
 using BeComfy.Common.Authentication;
 using BeComfy.Common.EFCore;
 using BeComfy.Common.Jaeger;
+using BeComfy.Common.Mongo;
 using BeComfy.Services.Identity.Domain;
 using BeComfy.Services.Identity.EF;
 using Microsoft.AspNetCore.Builder;
@@ -41,6 +42,8 @@ namespace BeComfy.Services.Identity
             
             services.AddJaeger();
             services.AddOpenTracing();
+            services.AddMongo();
+            services.AddMongoRepository<User>("Flights");
             services.AddEFCoreContext<IdentityContext>();
 
             var builder = new ContainerBuilder();

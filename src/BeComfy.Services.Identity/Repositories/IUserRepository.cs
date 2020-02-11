@@ -9,7 +9,7 @@ namespace BeComfy.Services.Identity.Repositories
         Task AddAsync(User user);
         Task<User> GetAsync(string email);
         Task<User> GetAsync(Guid id);
-        Task UpdateAsync(Guid id);
+        Task UpdateAsync(User id);
         Task DeleteAsync(Guid id);
     }
 }

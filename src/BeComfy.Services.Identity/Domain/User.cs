@@ -1,10 +1,11 @@
 using System;
+using BeComfy.Common.Mongo;
 using BeComfy.Common.Types.Exceptions;
 using Microsoft.AspNetCore.Identity;
 
 namespace BeComfy.Services.Identity.Domain
 {
-    public class User
+    public class User : IEntity
     {
         public User()
         {

@@ -6,7 +6,7 @@
 
  namespace BeComfy.Services.Identity.Repositories
  {
-     public class UserRepository : IUserRepository
+     public class UserRepository// : IUserRepository
      {
          private readonly IdentityContext _context;
 
