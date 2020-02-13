@@ -39,7 +39,14 @@ namespace BeComfy.Services.Identity
             services.AddJwt();
             services.AddControllers()
                 .AddNewtonsoftJson();
-            
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", cors => 
+                        cors.AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .AllowCredentials());
+            });
             services.AddJaeger();
             services.AddOpenTracing();
             services.AddMongo();
