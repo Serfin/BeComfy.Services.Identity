@@ -42,7 +42,7 @@ namespace BeComfy.Services.Identity
             services.AddJaeger();
             services.AddOpenTracing();
             services.AddMongo();
-            services.AddMongoRepository<User>("Flights");
+            services.AddMongoRepository<User>("Identities");
             services.AddEFCoreContext<IdentityContext>();
 
             var builder = new ContainerBuilder();
