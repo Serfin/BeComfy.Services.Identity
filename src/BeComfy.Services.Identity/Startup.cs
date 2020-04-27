@@ -6,7 +6,6 @@ using BeComfy.Common.Authentication;
 using BeComfy.Common.EFCore;
 using BeComfy.Common.Jaeger;
 using BeComfy.Common.Mongo;
-using BeComfy.Logging.Elk;
 using BeComfy.Services.Identity.Domain;
 using BeComfy.Services.Identity.EF;
 using Microsoft.AspNetCore.Builder;
