@@ -12,19 +12,18 @@ namespace BeComfy.Services.Identity.Domain
             
         }
         
-        public User(Guid id, string role, string email, string password, 
-            DateTime createdAt, DateTime updatedAt, 
+        public User(string role, string email, string password, 
             string firstname = null, string secondname = null, string surname = null)
         {
-            Id = id;
+            Id = Guid.NewGuid();
             Firstname = firstname;
             Secondname = secondname;
             Surname = surname;
             Role = role.ToUpperInvariant();
             Email = email.ToLowerInvariant();
             Password = password;
-            CreatedAt = createdAt;
-            UpdatedAt = updatedAt;
+            CreatedAt = DateTime.Now;
+            UpdatedAt = DateTime.Now;
         }
 
         public Guid Id { get; set; }
@@ -33,18 +32,13 @@ namespace BeComfy.Services.Identity.Domain
         public string Surname { get; set; }
         public string Role { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public string Password { get; private set; }
+        public DateTime CreatedAt { get; private set; }
+        public DateTime UpdatedAt { get; private set; }
 
-        public void SetPassword(string password, IPasswordHasher<User> passwordHasher)
+        public void SetPassword(string hashedPassword)
         {
-            if (string.IsNullOrWhiteSpace(password))
-            {
-                throw new BeComfyDomainException("Password can not be empty.");
-            }         
-                
-            Password = passwordHasher.HashPassword(this, password);
+            Password = hashedPassword;
         }
 
         public bool ValidatePassword(string password, IPasswordHasher<User> passwordHasher)

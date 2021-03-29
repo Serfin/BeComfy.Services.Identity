@@ -11,6 +11,7 @@ namespace BeComfy.Services.Identity.Domain
             {
                 return false;
             }
+            
             role = role.ToLowerInvariant();
 
             return role == User || role == Admin;

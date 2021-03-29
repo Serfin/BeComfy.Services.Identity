@@ -7,7 +7,7 @@ namespace BeComfy.Services.Identity.Services
 {
     public interface IIdentityService
     {
-        Task SignUpAsync(Guid id, string email, string password, string role = Role.User);
+        Task SignUpAsync(string email, string password, string role = Role.User);
         Task<JsonWebToken> SignInAsync(string email, string password);
     }
 }

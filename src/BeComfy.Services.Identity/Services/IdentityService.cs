@@ -35,7 +35,7 @@ namespace BeComfy.Services.Identity.Services
             return jwt;
         }
 
-        public async Task SignUpAsync(Guid id, string email, string password, string role = "user")
+        public async Task SignUpAsync(string email, string password, string role = "user")
         {
             var user = await _userRepository.GetAsync(email);
 
@@ -44,15 +44,32 @@ namespace BeComfy.Services.Identity.Services
                 throw new BeComfyDomainException($"Email {email} is already in use");
             }
 
-            if (string.IsNullOrWhiteSpace(role))
+            if (!PasswordMeetsRequirements(password))
+            {
+                throw new BeComfyDomainException($"Password does not meet the safety requirements");
+            }
+
+            if (Role.IsValid(role))
             {
                 role = Role.User;
             }
 
-            user = new User(id , role, email, password, DateTime.Now, DateTime.Now);
-            user.SetPassword(password, _passwordHasher);
+            user = new User(role, email, password);
+
+            _passwordHasher.HashPassword(user, password);
+            user.SetPassword(password);
 
             await _userRepository.AddAsync(user);
+        }
+
+        private bool PasswordMeetsRequirements(string password)
+        {
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
