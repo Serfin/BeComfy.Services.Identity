@@ -40,8 +40,5 @@ namespace BeComfy.Services.Identity.Domain
         {
             Password = hashedPassword;
         }
-
-        public bool ValidatePassword(string password, IPasswordHasher<User> passwordHasher)
-            => passwordHasher.VerifyHashedPassword(this, Password, password) != PasswordVerificationResult.Failed;
     }
 }

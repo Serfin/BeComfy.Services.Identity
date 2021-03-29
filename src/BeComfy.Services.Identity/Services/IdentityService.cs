@@ -25,7 +25,7 @@ namespace BeComfy.Services.Identity.Services
         public async Task<JsonWebToken> SignInAsync(string email, string password)
         {
             var user = await _userRepository.GetAsync(email);
-            if (user == null || !user.ValidatePassword(password, _passwordHasher))
+            if (user == null || ValidatePassword(user, password))
             {
                 throw new BeComfyDomainException("Invalid credentials.");
             }
@@ -37,13 +37,6 @@ namespace BeComfy.Services.Identity.Services
 
         public async Task SignUpAsync(string email, string password, string role = "user")
         {
-            var user = await _userRepository.GetAsync(email);
-
-            if (user != null)
-            {
-                throw new BeComfyDomainException($"Email {email} is already in use");
-            }
-
             if (!PasswordMeetsRequirements(password))
             {
                 throw new BeComfyDomainException($"Password does not meet the safety requirements");
@@ -54,10 +47,17 @@ namespace BeComfy.Services.Identity.Services
                 role = Role.User;
             }
 
+            var user = await _userRepository.GetAsync(email);
+
+            if (user != null)
+            {
+                throw new BeComfyDomainException($"Email {email} is already in use");
+            }
+
             user = new User(role, email, password);
 
-            _passwordHasher.HashPassword(user, password);
-            user.SetPassword(password);
+            var hashedPassword = _passwordHasher.HashPassword(user, password);
+            user.SetPassword(hashedPassword);
 
             await _userRepository.AddAsync(user);
         }
@@ -70,6 +70,11 @@ namespace BeComfy.Services.Identity.Services
             }
 
             return true;
+        }
+
+        public bool ValidatePassword(User user, string password)
+        {
+            return _passwordHasher.VerifyHashedPassword(user, user.Password, password) != PasswordVerificationResult.Failed;
         }
     }
 }
